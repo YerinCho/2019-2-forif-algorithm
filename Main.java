@@ -3,6 +3,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+    private static List<Food> foodList;
+
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
 
@@ -13,22 +15,28 @@ public class Main {
 
         PersonInfo personInfo = new PersonInfo(gender, priority);
 
-        List<Food> foodList = new ArrayList<>();
+        foodList = new ArrayList<>();
         int n = scan.nextInt();
         for(int i=0; i<n; i++) {
             for(int j=0; j<4; j++) {
                 foodList.add(new Food(scan.next(), scan.next(), scan.nextInt(), scan.nextInt()));
             }
         }
-        String todayFood = scan.nextLine();
-        System.out.println(mayEat(todayFood, personInfo) ? "O" : "X");
+        String todayFood = scan.next();
+        int currentStress = scan.nextInt();
+        System.out.println(mayEat(todayFood, currentStress, personInfo) ? "O" : "X");
     }
 
-    private static boolean mayEat(String todayFood, PersonInfo personInfo) {
+    private static boolean mayEat(String todayFood, int currentStress, PersonInfo personInfo) {
         boolean isMale = personInfo.getGender() == "M";
         double c=0, p=0, f=0;
         int price;
         int score = 0;
+
+        if(currentStress == 5) {
+            //TODO : 경제사정, 영양소 정보 노출
+            return true;
+        }
 
         if(c < 55 || c > (isMale ? 58 : 60)) {
             score += 10;
@@ -72,5 +80,21 @@ class Food {
         this.foodPrice = foodPrice;
         this.peopleCnt = peopleCnt;
         this.stressLv = stressLv;
+    }
+
+    public int getStressLv() {
+        return stressLv;
+    }
+
+    public int getPeopleCnt() {
+        return peopleCnt;
+    } 
+
+    public String getFoodPrice() {
+        return foodPrice;
+    }
+
+    public String getFoodName() {
+        return foodName;
     }
 }
