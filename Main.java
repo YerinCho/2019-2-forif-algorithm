@@ -71,17 +71,17 @@ public class Main {
         }
 
         if(price > getAverage(foodList)) {
-            score += personInfo.getPriority(1);
+            score += regressionAnalysis.getFinalResult(price, 1);
         }
 
         if(cRate < 55 || cRate > (isMale ? 58 : 60)) {
-            score += personInfo.getPriority(2);
+            score += regressionAnalysis.getFinalResult(c, 2);
         }
         if(pRate < 15 || pRate > (isMale ? 21 : 18)) {
-            score += personInfo.getPriority(3);
+            score += regressionAnalysis.getFinalResult(p, 3);
         }
         if(fRate < (isMale ? 22 : 21) || fRate > (isMale ? 25 : 24)) {
-            score += personInfo.getPriority(4);
+            score += regressionAnalysis.getFinalResult(f, 4);
         }
 
         todayFood.setResultStore(score);
