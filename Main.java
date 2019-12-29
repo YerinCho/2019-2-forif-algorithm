@@ -109,7 +109,7 @@ class PersonInfo {
         this.priority = priority;
     }
 
-    public String getGender() {
+   public String getGender() {
         return gender;
     }
 
