@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.lang.Math;
 
 public class Main {
     private static List<Food> foodList;
@@ -11,7 +12,7 @@ public class Main {
         System.out.println("성별을 입력해주세요: ");
         String gender = scan.next();
         System.out.println("가격, 탄수화물, 단백질, 지방의 우선순위를 입력해주세요.(형식: 1234)");
-        String priority = scan.nextLine();
+        int priority = scan.nextInt();
 
         foodList = new ArrayList<>();
         int n = scan.nextInt();
@@ -33,6 +34,10 @@ public class Main {
         int price = 0;
         int score = 0;
         int sum = 0;
+        double cRate = c / (c+p+f) * 100;
+        double pRate = p / (c+p+f) * 100;
+        double fRate = f / (c+p+f) * 100;
+
 
         if(personInfo.getCurrentStress() == 5) {
             //TODO : 경제사정, 영양소 정보 노출
@@ -41,19 +46,20 @@ public class Main {
 
         if(price > getAverage(foodList)) {
             //TODO : 지금 먹은 음식의 가격은 어떻게 구할까
-            return false;
+            score += personInfo.getPriority(1);
         }
 
-        if(c < 55 || c > (isMale ? 58 : 60)) {
-            score += 10;
+        if(cRate < 55 || cRate > (isMale ? 58 : 60)) {
+            score += personInfo.getPriority(2);
         }
-        if(p < 15 || p > (isMale ? 21 : 18)) {
-            score += 10;
+        if(pRate < 15 || pRate > (isMale ? 21 : 18)) {
+            score += personInfo.getPriority(3);
         }
-        if(f < (isMale ? 22 : 21) || f > (isMale ? 25 : 24)) {
-            score += 10;
+        if(fRate < (isMale ? 22 : 21) || fRate > (isMale ? 25 : 24)) {
+            score += personInfo.getPriority(4);
         }
-        return false;
+
+        return score < 70;  //기준 스코어는 임의로 정함, 수정 예정
     }
 
     private static int getAverage(List<Food> foodList) {
@@ -64,15 +70,16 @@ public class Main {
 
         return sum / foodList.size();
     }
+
 }
 
 class PersonInfo {
     private String gender;
-    private String priority;
+    private int priority;
     private String todayFood;
     private int currentStress;
 
-    public PersonInfo(String gender, String priority, String todayFood, int currentStress) {
+    public PersonInfo(String gender, int priority, String todayFood, int currentStress) {
         this.gender = gender;
         this.priority = priority;
         this.todayFood = todayFood;
@@ -83,8 +90,14 @@ class PersonInfo {
         return gender;
     }
 
-    public String getPrioirty() {
+    public int getPriority() {
         return priority;
+    }
+
+    public int getPriority(int order) {
+        int priorPerOrder = priority % (int)Math.pow(10, 5 - order) 
+            - priority / (int)Math.pow(10, 4 - order);
+        return (5 - priorPerOrder) * 10;
     }
 
     public String getTodayFood() {
