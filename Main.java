@@ -11,6 +11,8 @@ public class Main {
         System.out.println("가격, 탄수화물, 단백질, 지방의 우선순위를 입력해주세요.(형식: 1234)");
         String priority = scan.nextLine();
 
+        PersonInfo personInfo = new PersonInfo(gender, priority);
+
         List<Food> foodList = new ArrayList<>();
         int n = scan.nextInt();
         for(int i=0; i<n; i++) {
@@ -19,11 +21,11 @@ public class Main {
             }
         }
         String todayFood = scan.nextLine();
-        System.out.println(mayEat(todayFood, gender, priority) ? "O" : "X");
+        System.out.println(mayEat(todayFood, personInfo) ? "O" : "X");
     }
 
-    private static boolean mayEat(String todayFood, String gender, String priority) {
-        boolean isMale = gender == "M";
+    private static boolean mayEat(String todayFood, PersonInfo personInfo) {
+        boolean isMale = personInfo.getGender() == "M";
         double c=0, p=0, f=0;
         int price;
         int score = 0;
@@ -41,6 +43,24 @@ public class Main {
     }
 }
 
+class PersonInfo {
+    private String gender;
+    private String priority;
+
+    public PersonInfo(String gender, String priority) {
+        this.gender = gender;
+        this.priority = priority;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getPrioirty() {
+        return priority;
+    }
+}
+
 class Food {
     private String foodName;
     private String foodPrice;
@@ -52,9 +72,5 @@ class Food {
         this.foodPrice = foodPrice;
         this.peopleCnt = peopleCnt;
         this.stressLv = stressLv;
-    }
-
-    public Food getFood() {
-        return new Food(foodName, foodPrice, peopleCnt, stressLv); //가격, 탄수화물, 단백질, 지방
     }
 }
