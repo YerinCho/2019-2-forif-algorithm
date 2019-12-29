@@ -10,7 +10,7 @@ public class regressionAnalysis {
 
     static ArrayList<ArrayList<String>> eaten_data = new ArrayList<>();
 
-    public regressionAnalysis(String[] args) {
+    public regressionAnalysis() {
 
 	// 저장된 파일 이차원어레이리스트에 저장
 	try {
@@ -61,6 +61,13 @@ public class regressionAnalysis {
     }
 
     public static double getFinalResult(double input, int idx) {
+	switch (idx) {
+	case 1: break;
+	case 2: idx=5; break;
+	case 3: idx=6; break;
+	case 4: idx=7; break;
+	default : break;
+	}
 	return LinearAnalayis(idx)-input;
     }
 }
