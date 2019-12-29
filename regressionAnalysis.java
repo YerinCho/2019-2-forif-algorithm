@@ -67,7 +67,7 @@ public class regressionAnalysis {
 	case 4: idx=7; break;
 	default : break;
 	}
-	return LinearAnalayis(idx)-input;
+	return Math.abs(LinearAnalayis(idx)-input);
     }
     
     public static int classficate(double Finalresult) {
