@@ -63,6 +63,8 @@ public class Main {
 
 
         if(todayFood.getBeforeStressLv() == 5) {
+            System.out.println(String.format("스트레스가 최고 상태입니다.\n영양소는 탄수화물이 %3.2f, 단백질이 %3.2f, 지방이 %3.2f입니다.",
+            c, p, f));
             //TODO : 경제사정, 영양소 정보 노출
             foodData.write(todayFood);
             return true;
