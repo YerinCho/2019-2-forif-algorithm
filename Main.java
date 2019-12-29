@@ -13,29 +13,34 @@ public class Main {
         System.out.println("가격, 탄수화물, 단백질, 지방의 우선순위를 입력해주세요.(형식: 1234)");
         String priority = scan.nextLine();
 
-        PersonInfo personInfo = new PersonInfo(gender, priority);
-
         foodList = new ArrayList<>();
         int n = scan.nextInt();
         for(int i=0; i<n; i++) {
             for(int j=0; j<4; j++) {
-                foodList.add(new Food(scan.next(), scan.next(), scan.nextInt(), scan.nextInt()));
+                foodList.add(new Food(scan.next(), scan.nextInt(), scan.nextInt(), scan.nextInt()));
             }
         }
         String todayFood = scan.next();
         int currentStress = scan.nextInt();
-        System.out.println(mayEat(todayFood, currentStress, personInfo) ? "O" : "X");
+        PersonInfo personInfo = new PersonInfo(gender, priority, todayFood, currentStress);
+
+        System.out.println(mayEat(foodList, personInfo) ? "O" : "X");
     }
 
-    private static boolean mayEat(String todayFood, int currentStress, PersonInfo personInfo) {
+    private static boolean mayEat(List<Food> foodList, PersonInfo personInfo) {
         boolean isMale = personInfo.getGender() == "M";
         double c=0, p=0, f=0;
         int price;
         int score = 0;
+        int sum = 0;
 
-        if(currentStress == 5) {
+        if(personInfo.getCurrentStress() == 5) {
             //TODO : 경제사정, 영양소 정보 노출
             return true;
+        }
+
+        if(price > getAverage()) {
+            return false;
         }
 
         if(c < 55 || c > (isMale ? 58 : 60)) {
@@ -49,15 +54,28 @@ public class Main {
         }
         return false;
     }
+
+    private getAverage(List<Food> foodList) {
+        int sum = 0;
+        for(Food food : foodList) {
+            sum += food.getFoodPrice();
+        }
+
+        return sum / foodList.size();
+    }
 }
 
 class PersonInfo {
     private String gender;
     private String priority;
+    private String todayFood;
+    private int currentStress;
 
-    public PersonInfo(String gender, String priority) {
+    public PersonInfo(String gender, String priority, String todayFood, int currentStress) {
         this.gender = gender;
         this.priority = priority;
+        this.todayFood = todayFood;
+        this.currentStress = currentStress;
     }
 
     public String getGender() {
@@ -67,15 +85,23 @@ class PersonInfo {
     public String getPrioirty() {
         return priority;
     }
+
+    public String getTodayFood() {
+        return todayFood;
+    }
+
+    public int getCurrentStress() {
+        return currentStress;
+    }
 }
 
 class Food {
     private String foodName;
-    private String foodPrice;
+    private int foodPrice;
     private int peopleCnt;
     private int stressLv;
 
-    public Food(String foodName, String foodPrice, int peopleCnt, int stressLv) {
+    public Food(String foodName, int foodPrice, int peopleCnt, int stressLv) {
         this.foodName = foodName;
         this.foodPrice = foodPrice;
         this.peopleCnt = peopleCnt;
@@ -90,7 +116,7 @@ class Food {
         return peopleCnt;
     } 
 
-    public String getFoodPrice() {
+    public int getFoodPrice() {
         return foodPrice;
     }
 
