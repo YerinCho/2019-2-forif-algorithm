@@ -14,9 +14,9 @@ public class Main {
         String gender = scan.nextLine();
         System.out.println("가격, 탄수화물, 단백질, 지방의 우선순위를 입력해주세요.(형식: 1234)");
         int priority = scan.nextInt();
-
+        scan.nextLine();
         System.out.println("오늘의 음식은?");
-        String todayFood = scan.next();
+        String todayFood = scan.nextLine();
         System.out.println("음식의 가격은?");
         int foodPrice = scan.nextInt();
         System.out.println("인원 수는?");
@@ -40,7 +40,7 @@ public class Main {
         double c=foodData.getCarbohydrate(todayFoodName);
         double p=foodData.getProtein(todayFoodName);
         double f=foodData.getRefinedFat(todayFoodName);
-        int price = 0;
+        int price = todayFood.getFoodPrice();
         int score = 0;
         double cRate = c / (c+p+f) * 100;
         double pRate = p / (c+p+f) * 100;
@@ -49,11 +49,11 @@ public class Main {
 
         if(todayFood.getBeforeStressLv() == 5) {
             //TODO : 경제사정, 영양소 정보 노출
+            foodData.write(todayFood);
             return true;
         }
 
         if(price > getAverage(foodList)) {
-            //TODO : 지금 먹은 음식의 가격은 어떻게 구하는지
             score += personInfo.getPriority(1);
         }
 
@@ -67,6 +67,7 @@ public class Main {
             score += personInfo.getPriority(4);
         }
 
+        todayFood.setResultStore(score);
         foodData.write(todayFood);
 
         return score < 70;  //기준 스코어는 임의로 정함, 수정 예정
@@ -100,9 +101,9 @@ class PersonInfo {
     }
 
     public int getPriority(int order) {
-        int priorPerOrder = priority % (int)Math.pow(10, 5 - order) 
-            - priority / (int)Math.pow(10, 4 - order);
-        return (5 - priorPerOrder) * 10;
+        int one = priority % (int)Math.pow(10, 5 - order);
+        int two = one / (int)Math.pow(10, 4 - order);
+        return (5 - two) * 10;
     }
 }
 

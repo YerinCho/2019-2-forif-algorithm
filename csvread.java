@@ -16,8 +16,9 @@ public class csvread {
 			File csv = new File("Eaten_Food.csv");
 			BufferedReader br = new BufferedReader(new FileReader(csv));
 			String line = "";
-			int row = 0, i;
+			int row = 0;
 	
+			br.readLine();
 			while ((line = br.readLine()) != null) {
 			// -1 옵션은 마지막 "," 이후 빈 공백도 읽기 위한 옵션
 			String[] token = line.split(",", -1);
@@ -25,7 +26,7 @@ public class csvread {
 				Integer.parseInt(token[2]), Integer.parseInt(token[3]),
 				Integer.parseInt(token[4]));
 				foodList.add(food);
-				}
+			}
 			br.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -48,8 +49,8 @@ public class csvread {
 			String[] token = line.split(",", -1);
 			for (i = 0; i < 10; i++) {
 				Food_Info[row][i] = token[i];
-				Food_Name[i]=Food_Info[i][0];
-			}	
+			}
+			Food_Name[row]=Food_Info[row][0];
 			row++;
 			}
 			br.close();	
@@ -68,12 +69,12 @@ public class csvread {
             BufferedWriter fw = new BufferedWriter(new FileWriter("Eaten_Food.csv", true));
              
             // 파일안에 문자열 쓰기
-			fw.write(food.getFoodName() + "," + food.getFoodPrice() + "," + food.getPeopleCnt()
+			fw.write("\n" + food.getFoodName() + "," + food.getFoodPrice() + "," + food.getPeopleCnt()
 			+ "," + food.getBeforeStressLv() + "," + food.getAfterStressLv() + "," +
 			getCarbohydrate(food.getFoodName()) + "," + getProtein(food.getFoodName()) + "," +
 			getFat(food.getFoodName()) + "," + getSaturatedFat(food.getFoodName()) + "," +
 			getTransFat(food.getFoodName()) + "," + getCholesterol(food.getFoodName()) 
-			+ "," + (food.getResultScore() > 70 ? "1" : "0")+ "," + food.getResultScore() + "\n");
+			+ "," + (food.getResultScore() > 70 ? "0" : "1")+ "," + food.getResultScore());
             fw.flush();
  
             // 객체 닫기
