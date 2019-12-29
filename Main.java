@@ -51,6 +51,7 @@ public class Main {
      List<Food> foodList, PersonInfo personInfo) {
         boolean isMale = personInfo.getGender() == "M";
         String todayFoodName = todayFood.getFoodName();
+        regressionAnalysis analysis = new regressionAnalysis();
 
         double c=foodData.getCarbohydrate(todayFoodName);
         double p=foodData.getProtein(todayFoodName);
@@ -61,31 +62,33 @@ public class Main {
         double pRate = p / (c+p+f) * 100;
         double fRate = f / (c+p+f) * 100;
 
-
-        if(todayFood.getBeforeStressLv() == 5) {
-            //TODO : 경제사정, 영양소 정보 노출
-            foodData.write(todayFood);
-            return true;
-        }
-
         if(price > getAverage(foodList)) {
-            score += personInfo.getPriority(1);
+            score += personInfo.getPriority(price, 1);
         }
 
         if(cRate < 55 || cRate > (isMale ? 58 : 60)) {
-            score += personInfo.getPriority(2);
+            score += personInfo.getPriority(c, 2);
         }
         if(pRate < 15 || pRate > (isMale ? 21 : 18)) {
-            score += personInfo.getPriority(3);
+            score += personInfo.getPriority(p, 3);
         }
         if(fRate < (isMale ? 22 : 21) || fRate > (isMale ? 25 : 24)) {
-            score += personInfo.getPriority(4);
+            score += personInfo.getPriority(f, 4);
+        }
+        todayFood.setResultStore(score);
+        
+        if(todayFood.getBeforeStressLv() == 5) {
+            System.out.println(String.format("스트레스가 최고 상태입니다.\n영양소는 탄수화물이 %3.2f, 단백질이 %3.2f, 지방이 %3.2f입니다.",
+            c, p, f));
+            //TODO : 경제사정, 영양소 정보 노출
+            foodData.write(todayFood,score);
+            return true;
         }
 
         todayFood.setResultStore(score);
-        foodData.write(todayFood);
+        foodData.write(todayFood,score);
 
-        return score < 70;  //기준 스코어는 임의로 정함, 수정 예정
+        return analysis.classficate(score);  //기준 스코어는 임의로 정함, 수정 예정
     }
 
     private static int getAverage(List<Food> foodList) {
@@ -107,7 +110,7 @@ class PersonInfo {
         this.priority = priority;
     }
 
-    public String getGender() {
+   public String getGender() {
         return gender;
     }
 
@@ -115,13 +118,10 @@ class PersonInfo {
         return priority;
     }
 
-    public int getPriority(int order) {
-	//가격1 탄수화물 2 단백질 3 지방 4
+    public double getPriority(double input, int order) {
         int one = priority % (int)Math.pow(10, 5 - order);
         int two = one / (int)Math.pow(10, 4 - order);
-        
-        //(사용자 입력값 - 분석값 ) * 우선순위의 값 리턴
-        return analysis.getFinalResult(order)*(5 - two) * 10;
+        return analysis.getFinalResult(input, order)*(5 - two);
     }
 }
 

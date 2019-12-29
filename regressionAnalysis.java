@@ -41,7 +41,6 @@ public class regressionAnalysis {
 	for (int i = 0; i < n; i++) {
 	    sumx += i + 1;
 	    sumx2 += (i + 1) * (i + 1);
-	    System.out.println(eaten_data.get(i).get(idx));
 	    sumy += Double.parseDouble(eaten_data.get(i).get(idx));
 	}
 	double xbar = sumx / n;
@@ -60,8 +59,36 @@ public class regressionAnalysis {
 	return beta1 * (n + 1) + beta0;
     }
 
-    public static double getFinalResult(double input,int idx) {
+
+    public static double getFinalResult(double input, int idx) {
+	switch (idx) {
+	case 1: idx=5; break;
+	case 2: idx=6; break;
+	case 3: idx=7; break;
+	case 4: idx=8; break;
+	default : break;
+	}
 	double result=Math.abs(LinearAnalayis(idx)-input);
 	return result;
+    }
+    
+    public static boolean classficate(double Finalresult) {
+	double sumplus=0;
+	double summinus=0;
+	for(int i=0;i<eaten_data.size();i++) {
+	    if(Integer.parseInt(eaten_data.get(i).get(11))==1) {
+		sumplus+=Double.parseDouble(eaten_data.get(i).get(12));
+	    }
+	    else {
+		summinus+=Double.parseDouble(eaten_data.get(i).get(12));
+	    }
+	}
+	sumplus/=eaten_data.size();
+	summinus/=eaten_data.size();
+	sumplus=Math.abs(sumplus-Finalresult);
+	summinus=Math.abs(summinus-Finalresult);
+	
+	return sumplus<summinus ? true : false;
+
     }
 }

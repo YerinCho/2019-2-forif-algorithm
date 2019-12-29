@@ -61,7 +61,7 @@ public class csvread {
 	
 	}
 
-	public void write(Food food) {
+	public void write(Food food,double score) {
 		try{
                          
             // BufferedWriter 와 FileWriter를 조합하여 사용 (속도 향상)
@@ -73,7 +73,7 @@ public class csvread {
 			getCarbohydrate(food.getFoodName()) + " " + getProtein(food.getFoodName()) + " " +
 			getFat(food.getFoodName()) + " " + getSaturatedFat(food.getFoodName()) + " " +
 			getTransFat(food.getFoodName()) + " " + getCholesterol(food.getFoodName()) 
-			+ " " + (food.getResultScore() > 70 ? "0" : "1")+ " " + food.getResultScore());
+			+ " " + (food.getResultScore() > score ? "0" : "1")+ " " + food.getResultScore());
             fw.flush();
  
             // 객체 닫기
