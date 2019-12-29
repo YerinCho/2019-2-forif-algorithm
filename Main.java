@@ -8,20 +8,25 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
+        foodList = new ArrayList<>();
 
-        System.out.println("성별을 입력해주세요: ");
+        System.out.println("성별을 입력해주세요.(M/F)");
         String gender = scan.next();
         System.out.println("가격, 탄수화물, 단백질, 지방의 우선순위를 입력해주세요.(형식: 1234)");
         int priority = scan.nextInt();
 
-        foodList = new ArrayList<>();
+        System.out.println("몇 가지의 음식을 드셨습니까?");
         int n = scan.nextInt();
+        System.out.println("음식명, 음식값, 인원수, 스트레스 지수를 순서대로 입력해주세요.");
         for(int i=0; i<n; i++) {
             for(int j=0; j<4; j++) {
                 foodList.add(new Food(scan.next(), scan.nextInt(), scan.nextInt(), scan.nextInt()));
             }
         }
+
+        System.out.println("오늘의 음식은?");
         String todayFood = scan.next();
+        System.out.println("지금 스트레스의 상태는?(1~5)");
         int currentStress = scan.nextInt();
         PersonInfo personInfo = new PersonInfo(gender, priority, todayFood, currentStress);
 
