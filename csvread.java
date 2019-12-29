@@ -87,27 +87,27 @@ public class csvread {
 	}
 
 	public float getCarbohydrate(String Name) {
-	return Float.parseFloat(Food_Info[searchName(Food_Name, Name)][2]);
+	return Float.parseFloat(Food_Info[searchName(Name)][2]);
     }
 
     public float getProtein(String Name) {
-	return Float.parseFloat(Food_Info[searchName(Food_Name, Name)][3]);
+	return Float.parseFloat(Food_Info[searchName(Name)][3]);
     }
 
     public float getFat(String Name) {
-	return Float.parseFloat(Food_Info[searchName(Food_Name, Name)][4]);
+	return Float.parseFloat(Food_Info[searchName(Name)][4]);
     }
 
     public float getSaturatedFat(String Name) {
-	return Float.parseFloat(Food_Info[searchName(Food_Name, Name)][8]);
+	return Float.parseFloat(Food_Info[searchName(Name)][8]);
     }
 
     public float getTransFat(String Name) {
-	return Float.parseFloat(Food_Info[searchName(Food_Name, Name)][9]);
+	return Float.parseFloat(Food_Info[searchName(Name)][9]);
     }
 
     public float getCholesterol(String Name) {
-	return Float.parseFloat(Food_Info[searchName(Food_Name, Name)][7]);
+	return Float.parseFloat(Food_Info[searchName(Name)][7]);
 	}
 	
 	public float getRefinedFat(String Name) {
@@ -115,7 +115,7 @@ public class csvread {
 		+ getCholesterol(Name) * 0.2f + getSaturatedFat(Name) * 0.2f;
 	}
     
-    public int searchName(String[] Food_Name, String Name) {
+    public int searchName(String Name) {
 	int idx = Arrays.binarySearch(Food_Name,Name);
 	return idx;
 	}

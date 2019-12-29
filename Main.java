@@ -8,12 +8,29 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
+        Food food;
         foodList = csvread.getEatenFoodList();
+        csvread foodData = new csvread("Food_Data.csv");
 
         System.out.println("성별을 입력해주세요.(M/F)");
         String gender = scan.nextLine();
         System.out.println("가격, 탄수화물, 단백질, 지방의 우선순위를 입력해주세요.(형식: 1234)");
         int priority = scan.nextInt();
+        PersonInfo personInfo = new PersonInfo(gender, priority);
+        while(true) {
+            food = initFood(scan);
+            if(foodData.searchName(food.getFoodName()) >= 0) {
+                break;
+            } else {
+                System.out.println("데이터에 해당 메뉴가 없습니다.");
+                continue;
+            }
+        }
+        
+        System.out.println(mayEat(food, foodData, foodList, personInfo) ? "O" : "X");
+    }
+
+    private static Food initFood(Scanner scan) {
         scan.nextLine();
         System.out.println("오늘의 음식은?");
         String todayFood = scan.nextLine();
@@ -27,14 +44,12 @@ public class Main {
         int afterStress = scan.nextInt();
 
         Food food = new Food(todayFood, foodPrice, peopleCnt, currentStress, afterStress);
-        PersonInfo personInfo = new PersonInfo(gender, priority);
-
-        System.out.println(mayEat(food, foodList, personInfo) ? "O" : "X");
+        return food;
     }
 
-    private static boolean mayEat(Food todayFood, List<Food> foodList, PersonInfo personInfo) {
+    private static boolean mayEat(Food todayFood, csvread foodData,
+     List<Food> foodList, PersonInfo personInfo) {
         boolean isMale = personInfo.getGender() == "M";
-        csvread foodData = new csvread("Food_Data.csv");
         String todayFoodName = todayFood.getFoodName();
 
         double c=foodData.getCarbohydrate(todayFoodName);
