@@ -93,7 +93,6 @@ public class Main {
         for(Food food : foodList) {
             sum += food.getFoodPrice();
         }
-
         return sum / foodList.size();
     }
 }
@@ -101,6 +100,7 @@ public class Main {
 class PersonInfo {
     private String gender;
     private int priority;
+    regressionAnalysis analysis = new regressionAnalysis();
 
     public PersonInfo(String gender, int priority) {
         this.gender = gender;
@@ -116,9 +116,12 @@ class PersonInfo {
     }
 
     public int getPriority(int order) {
+	//가격1 탄수화물 2 단백질 3 지방 4
         int one = priority % (int)Math.pow(10, 5 - order);
         int two = one / (int)Math.pow(10, 4 - order);
-        return (5 - two) * 10;
+        
+        //(사용자 입력값 - 분석값 ) * 우선순위의 값 리턴
+        return analysis.getFinalResult(order)*(5 - two) * 10;
     }
 }
 
