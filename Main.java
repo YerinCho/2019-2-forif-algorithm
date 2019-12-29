@@ -11,7 +11,7 @@ public class Main {
         foodList = new ArrayList<>();
 
         System.out.println("성별을 입력해주세요.(M/F)");
-        String gender = scan.next();
+        String gender = scan.nextLine();
         System.out.println("가격, 탄수화물, 단백질, 지방의 우선순위를 입력해주세요.(형식: 1234)");
         int priority = scan.nextInt();
 
@@ -50,7 +50,7 @@ public class Main {
         }
 
         if(price > getAverage(foodList)) {
-            //TODO : 지금 먹은 음식의 가격은 어떻게 구할까
+            //TODO : 지금 먹은 음식의 가격은 어떻게 구하는지
             score += personInfo.getPriority(1);
         }
 
