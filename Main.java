@@ -100,6 +100,7 @@ public class Main {
 class PersonInfo {
     private String gender;
     private int priority;
+    regressionAnalysis analysis = new regressionAnalysis();
 
     public PersonInfo(String gender, int priority) {
         this.gender = gender;
@@ -117,7 +118,7 @@ class PersonInfo {
     public int getPriority(int order) {
         int one = priority % (int)Math.pow(10, 5 - order);
         int two = one / (int)Math.pow(10, 4 - order);
-        return (5 - two) * 10;
+        return analysis.getFinalResult(input, order)*(5 - two) * 10;
     }
 }
 

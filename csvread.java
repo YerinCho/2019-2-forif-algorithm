@@ -1,14 +1,44 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class csvread {
 
     static String[][] Food_Info = new String[2221][10]; // CSV 파일을 읽고 저장할 배열 선언 , arraylist나 벡터 등의 다른 곳에 저장해도 상관없음
+    String[] Food_Name = new String[2221];
 
-    public static void main(String[] args) {
+    public static List<Food> getEatenFoodList() {
+	List<Food> foodList = new ArrayList<>();
+
 	try {
 	    // csv 데이터 파일
-	    File csv = new File("Food_Data.csv");
+	    File csv = new File("Eaten_Food.csv");
+	    BufferedReader br = new BufferedReader(new FileReader(csv));
+	    String line = "";
+	    int row = 0;
+
+	    br.readLine();
+	    while ((line = br.readLine()) != null) {
+		// -1 옵션은 마지막 "," 이후 빈 공백도 읽기 위한 옵션
+		String[] token = line.split(",", -1);
+		Food food = new Food(token[0], Integer.parseInt(token[1]), Integer.parseInt(token[2]),
+			Integer.parseInt(token[3]), Integer.parseInt(token[4]));
+		foodList.add(food);
+	    }
+	    br.close();
+	} catch (FileNotFoundException e) {
+	    e.printStackTrace();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+	return foodList;
+    }
+
+    public csvread(String fileName) {
+	try {
+	    // csv 데이터 파일
+	    File csv = new File(fileName);
 	    BufferedReader br = new BufferedReader(new FileReader(csv));
 	    String line = "";
 	    int row = 0, i;
@@ -19,56 +49,72 @@ public class csvread {
 		for (i = 0; i < 10; i++) {
 		    Food_Info[row][i] = token[i];
 		}
-
-		// CSV에서 읽어 배열에 옮긴 자료 확인하기 위한 출력
-		for (i = 0; i < 10; i++) {
-		    System.out.print(Food_Info[row][i] + " ");
-		}
-		System.out.println("");
-
+		Food_Name[row] = Food_Info[row][0];
 		row++;
 	    }
 	    br.close();
-
 	} catch (FileNotFoundException e) {
 	    e.printStackTrace();
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
+
     }
 
+    public void write(Food food) {
+	try {
 
-    public static float getCarbohydrate(String Name) {
+	    // BufferedWriter 와 FileWriter를 조합하여 사용 (속도 향상)
+	    BufferedWriter fw = new BufferedWriter(new FileWriter("Eaten_Food.csv", true));
+
+	    // 파일안에 문자열 쓰기
+	    fw.write("\n" + food.getFoodName() + "," + food.getFoodPrice() + "," + food.getPeopleCnt() + ","
+		    + food.getBeforeStressLv() + "," + food.getAfterStressLv() + ","
+		    + getCarbohydrate(food.getFoodName()) + "," + getProtein(food.getFoodName()) + ","
+		    + getFat(food.getFoodName()) + "," + getSaturatedFat(food.getFoodName()) + ","
+		    + getTransFat(food.getFoodName()) + "," + getCholesterol(food.getFoodName()) + ","
+		    + (food.getResultScore() > 70 ? "0" : "1") + "," + food.getResultScore());
+	    fw.flush();
+
+	    // 객체 닫기
+	    fw.close();
+
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+    }
+
+    public float getCarbohydrate(String Name) {
 	return Float.parseFloat(Food_Info[searchName(Name)][2]);
     }
 
-    public static float getProtein(String Name) {
+    public float getProtein(String Name) {
 	return Float.parseFloat(Food_Info[searchName(Name)][3]);
     }
 
-    public static float getFat(String Name) {
+    public float getFat(String Name) {
 	return Float.parseFloat(Food_Info[searchName(Name)][4]);
     }
 
-    public static float getSaturatedFat(String Name) {
+    public float getSaturatedFat(String Name) {
 	return Float.parseFloat(Food_Info[searchName(Name)][8]);
     }
 
-    public static float getTransFat(String Name) {
+    public float getTransFat(String Name) {
 	return Float.parseFloat(Food_Info[searchName(Name)][9]);
     }
 
-    public static float getCholesterol(String Name) {
+    public float getCholesterol(String Name) {
 	return Float.parseFloat(Food_Info[searchName(Name)][7]);
     }
-    
-    public static int searchName(String Name) {
-	String[] Food_Name=new String[2221];
-	for(int i=1;i<2221;i++) {
-	    Food_Name[i]=Food_Info[i][0];
-	}
-	
-	int idx = Arrays.binarySearch(Food_Name,Name);
+
+    public float getRefinedFat(String Name) {
+	return getFat(Name) * 0.4f + getTransFat(Name) * 0.2f + getCholesterol(Name) * 0.2f
+		+ getSaturatedFat(Name) * 0.2f;
+    }
+
+    public int searchName(String Name) {
+	int idx = Arrays.binarySearch(Food_Name, Name);
 	return idx;
     }
 }
