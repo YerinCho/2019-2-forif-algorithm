@@ -30,7 +30,7 @@ public class Main {
     private static boolean mayEat(List<Food> foodList, PersonInfo personInfo) {
         boolean isMale = personInfo.getGender() == "M";
         double c=0, p=0, f=0;
-        int price;
+        int price = 0;
         int score = 0;
         int sum = 0;
 
@@ -39,7 +39,8 @@ public class Main {
             return true;
         }
 
-        if(price > getAverage()) {
+        if(price > getAverage(foodList)) {
+            //TODO : 지금 먹은 음식의 가격은 어떻게 구할까
             return false;
         }
 
@@ -55,7 +56,7 @@ public class Main {
         return false;
     }
 
-    private getAverage(List<Food> foodList) {
+    private static int getAverage(List<Food> foodList) {
         int sum = 0;
         for(Food food : foodList) {
             sum += food.getFoodPrice();
