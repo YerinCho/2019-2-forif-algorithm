@@ -9,6 +9,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         foodList = new ArrayList<>();
+        csvread eatenFood = new csvread("Eaten_Food.csv");
 
         System.out.println("성별을 입력해주세요.(M/F)");
         String gender = scan.nextLine();
@@ -20,7 +21,7 @@ public class Main {
         System.out.println("음식명, 음식값, 인원수, 스트레스 지수를 순서대로 입력해주세요.");
         for(int i=0; i<n; i++) {
             for(int j=0; j<4; j++) {
-                foodList.add(new Food(scan.next(), scan.nextInt(), scan.nextInt(), scan.nextInt()));
+                eatenFood.writeData();
             }
         }
 
@@ -35,10 +36,14 @@ public class Main {
 
     private static boolean mayEat(List<Food> foodList, PersonInfo personInfo) {
         boolean isMale = personInfo.getGender() == "M";
-        double c=0, p=0, f=0;
+        csvread foodData = new csvread("Food_Data.csv");
+        String todayFood = personInfo.getTodayFood();
+
+        double c=foodData.getCarbohydrate(todayFood);
+        double p=foodData.getProtein(todayFood);
+        double f=foodData.getRefinedFat(todayFood);
         int price = 0;
         int score = 0;
-        int sum = 0;
         double cRate = c / (c+p+f) * 100;
         double pRate = p / (c+p+f) * 100;
         double fRate = f / (c+p+f) * 100;
@@ -75,7 +80,6 @@ public class Main {
 
         return sum / foodList.size();
     }
-
 }
 
 class PersonInfo {
@@ -118,17 +122,24 @@ class Food {
     private String foodName;
     private int foodPrice;
     private int peopleCnt;
-    private int stressLv;
+    private int beforeStressLv;
+    private int afterStressLv;
+    private int resultScore;
 
-    public Food(String foodName, int foodPrice, int peopleCnt, int stressLv) {
+    public Food(String foodName, int foodPrice, int peopleCnt, int beforeStressLv, int afterStressLv) {
         this.foodName = foodName;
         this.foodPrice = foodPrice;
         this.peopleCnt = peopleCnt;
-        this.stressLv = stressLv;
+        this.beforeStressLv = beforeStressLv;
+        this.afterStressLv = afterStressLv;
     }
 
-    public int getStressLv() {
-        return stressLv;
+    public int getBeforeStressLv() {
+        return beforeStressLv;
+    }
+
+    public int getAfterStressLv() {
+        return afterStressLv;
     }
 
     public int getPeopleCnt() {
@@ -141,5 +152,13 @@ class Food {
 
     public String getFoodName() {
         return foodName;
+    }
+
+    public void setResultStore(int resultScore) {
+        this.resultScore = resultScore;
+    }
+
+    public int getResultScore() {
+        return resultScore;
     }
 }
