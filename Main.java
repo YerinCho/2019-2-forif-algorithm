@@ -71,17 +71,17 @@ public class Main {
         }
 
         if(price > getAverage(foodList)) {
-            score += regressionAnalysis.getFinalResult(price, 1);
+            score += personInfo.getPriority(price, 1);
         }
 
         if(cRate < 55 || cRate > (isMale ? 58 : 60)) {
-            score += regressionAnalysis.getFinalResult(c, 2);
+            score += personInfo.getPriority(c, 2);
         }
         if(pRate < 15 || pRate > (isMale ? 21 : 18)) {
-            score += regressionAnalysis.getFinalResult(p, 3);
+            score += personInfo.getPriority(p, 3);
         }
         if(fRate < (isMale ? 22 : 21) || fRate > (isMale ? 25 : 24)) {
-            score += regressionAnalysis.getFinalResult(f, 4);
+            score += personInfo.getPriority(f, 4);
         }
 
         todayFood.setResultStore(score);
@@ -118,7 +118,7 @@ class PersonInfo {
         return priority;
     }
 
-    public int getPriority(int order) {
+    public double getPriority(double input, int order) {
         int one = priority % (int)Math.pow(10, 5 - order);
         int two = one / (int)Math.pow(10, 4 - order);
         return analysis.getFinalResult(input, order)*(5 - two) * 10;

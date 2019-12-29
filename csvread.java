@@ -13,15 +13,14 @@ public class csvread {
 
 		try {
 			// csv 데이터 파일
-			File csv = new File("Eaten_Food.csv");
+			File csv = new File("Eaten_Food.txt");
 			BufferedReader br = new BufferedReader(new FileReader(csv));
 			String line = "";
 			int row = 0;
 	
-			br.readLine();
 			while ((line = br.readLine()) != null) {
 			// -1 옵션은 마지막 "," 이후 빈 공백도 읽기 위한 옵션
-			String[] token = line.split(",", -1);
+			String[] token = line.split(" ", -1);
 				Food food = new Food(token[0], Integer.parseInt(token[1]),
 				Integer.parseInt(token[2]), Integer.parseInt(token[3]),
 				Integer.parseInt(token[4]));
@@ -66,15 +65,15 @@ public class csvread {
 		try{
                          
             // BufferedWriter 와 FileWriter를 조합하여 사용 (속도 향상)
-            BufferedWriter fw = new BufferedWriter(new FileWriter("Eaten_Food.csv", true));
+            BufferedWriter fw = new BufferedWriter(new FileWriter("Eaten_Food.txt", true));
              
             // 파일안에 문자열 쓰기
-			fw.write("\n" + food.getFoodName() + "," + food.getFoodPrice() + "," + food.getPeopleCnt()
-			+ "," + food.getBeforeStressLv() + "," + food.getAfterStressLv() + "," +
-			getCarbohydrate(food.getFoodName()) + "," + getProtein(food.getFoodName()) + "," +
-			getFat(food.getFoodName()) + "," + getSaturatedFat(food.getFoodName()) + "," +
-			getTransFat(food.getFoodName()) + "," + getCholesterol(food.getFoodName()) 
-			+ "," + (food.getResultScore() > 70 ? "0" : "1")+ "," + food.getResultScore());
+			fw.write("\n" + food.getFoodName() + " " + food.getFoodPrice() + " " + food.getPeopleCnt()
+			+ " " + food.getBeforeStressLv() + " " + food.getAfterStressLv() + " " +
+			getCarbohydrate(food.getFoodName()) + ",= " + getProtein(food.getFoodName()) + " " +
+			getFat(food.getFoodName()) + " " + getSaturatedFat(food.getFoodName()) + " " +
+			getTransFat(food.getFoodName()) + " " + getCholesterol(food.getFoodName()) 
+			+ " " + (food.getResultScore() > 70 ? "0" : "1")+ " " + food.getResultScore());
             fw.flush();
  
             // 객체 닫기
