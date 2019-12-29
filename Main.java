@@ -8,40 +8,38 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
-        foodList = new ArrayList<>();
-        csvread eatenFood = new csvread("Eaten_Food.csv");
+        foodList = csvread.getEatenFoodList();
 
         System.out.println("성별을 입력해주세요.(M/F)");
         String gender = scan.nextLine();
         System.out.println("가격, 탄수화물, 단백질, 지방의 우선순위를 입력해주세요.(형식: 1234)");
         int priority = scan.nextInt();
 
-        System.out.println("몇 가지의 음식을 드셨습니까?");
-        int n = scan.nextInt();
-        System.out.println("음식명, 음식값, 인원수, 스트레스 지수를 순서대로 입력해주세요.");
-        for(int i=0; i<n; i++) {
-            for(int j=0; j<4; j++) {
-                eatenFood.writeData();
-            }
-        }
-
         System.out.println("오늘의 음식은?");
         String todayFood = scan.next();
+        System.out.println("음식의 가격은?");
+        int foodPrice = scan.nextInt();
+        System.out.println("인원 수는?");
+        int peopleCnt = scan.nextInt();
         System.out.println("지금 스트레스의 상태는?(1~5)");
         int currentStress = scan.nextInt();
-        PersonInfo personInfo = new PersonInfo(gender, priority, todayFood, currentStress);
+        System.out.println("먹고 난 후의 스트레스는?(1~5)");
+        int afterStress = scan.nextInt();
 
-        System.out.println(mayEat(foodList, personInfo) ? "O" : "X");
+        Food food = new Food(todayFood, foodPrice, peopleCnt, currentStress, afterStress);
+        PersonInfo personInfo = new PersonInfo(gender, priority);
+
+        System.out.println(mayEat(food, foodList, personInfo) ? "O" : "X");
     }
 
-    private static boolean mayEat(List<Food> foodList, PersonInfo personInfo) {
+    private static boolean mayEat(Food todayFood, List<Food> foodList, PersonInfo personInfo) {
         boolean isMale = personInfo.getGender() == "M";
         csvread foodData = new csvread("Food_Data.csv");
-        String todayFood = personInfo.getTodayFood();
+        String todayFoodName = todayFood.getFoodName();
 
-        double c=foodData.getCarbohydrate(todayFood);
-        double p=foodData.getProtein(todayFood);
-        double f=foodData.getRefinedFat(todayFood);
+        double c=foodData.getCarbohydrate(todayFoodName);
+        double p=foodData.getProtein(todayFoodName);
+        double f=foodData.getRefinedFat(todayFoodName);
         int price = 0;
         int score = 0;
         double cRate = c / (c+p+f) * 100;
@@ -49,7 +47,7 @@ public class Main {
         double fRate = f / (c+p+f) * 100;
 
 
-        if(personInfo.getCurrentStress() == 5) {
+        if(todayFood.getBeforeStressLv() == 5) {
             //TODO : 경제사정, 영양소 정보 노출
             return true;
         }
@@ -69,6 +67,8 @@ public class Main {
             score += personInfo.getPriority(4);
         }
 
+        foodData.write(todayFood);
+
         return score < 70;  //기준 스코어는 임의로 정함, 수정 예정
     }
 
@@ -85,14 +85,10 @@ public class Main {
 class PersonInfo {
     private String gender;
     private int priority;
-    private String todayFood;
-    private int currentStress;
 
-    public PersonInfo(String gender, int priority, String todayFood, int currentStress) {
+    public PersonInfo(String gender, int priority) {
         this.gender = gender;
         this.priority = priority;
-        this.todayFood = todayFood;
-        this.currentStress = currentStress;
     }
 
     public String getGender() {
@@ -107,14 +103,6 @@ class PersonInfo {
         int priorPerOrder = priority % (int)Math.pow(10, 5 - order) 
             - priority / (int)Math.pow(10, 4 - order);
         return (5 - priorPerOrder) * 10;
-    }
-
-    public String getTodayFood() {
-        return todayFood;
-    }
-
-    public int getCurrentStress() {
-        return currentStress;
     }
 }
 
