@@ -81,12 +81,12 @@ public class Main {
             System.out.println(String.format("스트레스가 최고 상태입니다.\n영양소는 탄수화물이 %3.2f, 단백질이 %3.2f, 지방이 %3.2f입니다.",
             c, p, f));
             //TODO : 경제사정, 영양소 정보 노출
-            foodData.write(todayFood,score);
+            foodData.write(todayFood,analysis.classficate(score));
             return true;
         }
 
         todayFood.setResultStore(score);
-        foodData.write(todayFood,score);
+        foodData.write(todayFood,analysis.classficate(score));
 
         return analysis.classficate(score);  //기준 스코어는 임의로 정함, 수정 예정
     }
